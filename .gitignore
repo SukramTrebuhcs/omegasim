@@ -1,3 +1,10 @@
+# xcode off
+xcuserdata/
+*.xcuserstate
+DerivedData/
+.DS_Store
+Signing.local.xcconfig
+
 # Raw source recordings: ~46MB of long-form YouTube rips used only as analysis input.
 # They must never enter git history — once committed, large binaries cannot practically
 # be removed again, and republishing third-party recordings is not the intent.
