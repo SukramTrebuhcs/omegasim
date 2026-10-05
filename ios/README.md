@@ -5,6 +5,47 @@ web application used by the browser and Android builds. The existing JavaScript 
 `src/05-app-bruecke.js` maps OmegaSim's Web Bluetooth calls to the native
 `@capacitor-community/bluetooth-le` implementation.
 
+## Current status
+
+The iOS foundation is working on a physical device. The following behavior has been
+verified:
+
+- The application builds and launches on iOS.
+- A Carrera Hybrid car is discoverable and connectable.
+- A connected controller sends driving commands through the application to the car.
+
+This confirms the complete basic control path:
+
+```text
+Controller → OmegaSim web logic → Capacitor bridge → native iOS BLE → car
+```
+
+Ghost driving, long-running multi-car reliability, backup and restore, native multiplayer
+hosting, and release packaging still require additional implementation or device testing.
+The detailed checklist is maintained in `IOS_TODO.md`.
+
+## What has been implemented
+
+- A Capacitor 8 iOS application using the same OmegaSim interface and driving logic as the
+  browser and Android versions.
+- An Xcode project at `ios/App/App.xcodeproj` relative to this directory.
+- Native BLE discovery, connection, service discovery, characteristic access,
+  notifications, reads, and writes through `@capacitor-community/bluetooth-le`.
+- The existing Web Bluetooth compatibility API from `src/05-app-bruecke.js`, allowing the
+  shared application code to use the native iOS BLE implementation without a separate
+  driving stack.
+- Bluetooth and local-network permission descriptions in the iOS `Info.plist`.
+- Local-network transport permission for the multiplayer client.
+- Screen-awake behavior during use and a hidden native status bar.
+- A dedicated `tools/ios_www.py` builder that copies the versioned OmegaSim web bundle into
+  the iOS application.
+- npm commands for generating assets, synchronizing Capacitor, and opening Xcode.
+- A Swift compatibility fix for Bluetooth LE plugin 8.3.0. The plugin attempted to cast a
+  Capacitor JavaScript value directly to `UInt16`; it now reads a range-checked `Int` first.
+- A durable npm `postinstall` script that reapplies the Bluetooth fix after dependency
+  installation.
+- A successful unsigned iOS Simulator build using `xcodebuild`.
+
 ## Requirements
 
 - macOS with Xcode 26 or newer
@@ -25,6 +66,12 @@ npm run open
 ```
 
 Select an Apple development team for the `App` target, connect an iPhone, and run the app.
+
+The Xcode project can also be opened directly:
+
+```text
+ios/ios/App/App.xcodeproj
+```
 
 ## Keeping the embedded application current
 
