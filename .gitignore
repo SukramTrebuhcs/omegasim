@@ -1,3 +1,8 @@
+# agents off
+.ai/
+AGENTS.md
+CLAUDE.md
+
 # xcode off
 xcuserdata/
 *.xcuserstate
